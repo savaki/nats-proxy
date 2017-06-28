@@ -13,11 +13,13 @@ import (
 const (
 	DefaultSubject = "api"
 	DefaultTimeout = time.Second * 10
+	DefaultQueue   = "service"
 )
 
 type config struct {
 	handler        Handler
 	url            string
+	queue          string
 	nc             *nats.Conn
 	headers        map[string]struct{}
 	cookies        map[string]struct{}
@@ -40,6 +42,13 @@ func WithNats(nc *nats.Conn) Option {
 func WithUrl(url string) Option {
 	return func(p *config) {
 		p.url = url
+	}
+}
+
+// WithQueue specifies the queue the nats subscribers should belong to
+func WithQueue(queue string) Option {
+	return func(p *config) {
+		p.queue = queue
 	}
 }
 
@@ -108,6 +117,7 @@ func WithHandler(h Handler) Option {
 func readConfig(opts ...Option) (*config, error) {
 	c := &config{
 		subject:        DefaultSubject,
+		queue:          DefaultQueue,
 		timeout:        DefaultTimeout,
 		onError:        onError,
 		returnNotFound: true,

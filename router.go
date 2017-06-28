@@ -18,8 +18,9 @@ import (
 type Router struct {
 	h              http.Handler
 	nc             *nats.Conn
-	subject        string
-	returnNotFound bool
+	subject        string // root subject to publish to
+	queue          string // name of queue for QueueSubscribe
+	returnNotFound bool   // should router reply to 404 responses
 }
 
 // Wrap an existing http.Handler with the specified options
@@ -33,6 +34,7 @@ func Wrap(h http.Handler, opts ...Option) (*Router, error) {
 		h:              h,
 		nc:             c.nc,
 		subject:        c.subject,
+		queue:          c.queue,
 		returnNotFound: c.returnNotFound,
 	}
 
@@ -46,12 +48,12 @@ func (r *Router) Subscribe(ctx context.Context) (<-chan struct{}, error) {
 		subject = subject[0 : len(subject)-1]
 	}
 
-	root, err := r.nc.QueueSubscribe(subject, "worker", r.handler)
+	root, err := r.nc.QueueSubscribe(subject, r.queue, r.handler)
 	if err != nil {
 		return nil, err
 	}
 
-	children, err := r.nc.QueueSubscribe(subject+".>", "worker", r.handler)
+	children, err := r.nc.QueueSubscribe(subject+".>", r.queue, r.handler)
 	if err != nil {
 		root.Unsubscribe()
 		return nil, err
