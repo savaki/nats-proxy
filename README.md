@@ -25,8 +25,8 @@ big ones.
 ```go
 nc, _ := nats.Connect(nats.DefaultURL)
 gw, _ := nats_proxy.Wrap(h, 
-  nats_proxy.Nats(nc),
-  nats_proxy.Subject("api"), // gateway root e.g. /
+  nats_proxy.WithNats(nc),
+  nats_proxy.WithSubject("api"), // gateway root e.g. /
 )
 
 ```
@@ -45,8 +45,8 @@ h := http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 
 nc, _ := nats.Connect(nats.DefaultURL)
 nats_proxy.Wrap(h, 
-  nats_proxy.Nats(nc),
-  nats_proxy.Subject("api.sample"), // e.g. /api/sample
+  nats_proxy.WithNats(nc),
+  nats_proxy.WithSubject("api.sample"), // e.g. /api/sample
 )
 ```
 
