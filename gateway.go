@@ -51,6 +51,8 @@ func NewGateway(opts ...Option) (*Gateway, error) {
 		h = request(c.nc, c.timeout)
 	}
 
+	h = Chain(h, c.filters...)
+
 	return &Gateway{
 		headers: c.headers,
 		subject: c.subject,

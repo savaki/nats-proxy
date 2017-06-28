@@ -16,3 +16,22 @@ func Nop() Handler {
 		return message, nil
 	}
 }
+
+// Filter allows filters to be applied after nats-proxy has transformed the request into a *Message
+type Filter func(Handler) Handler
+
+// AndThen provides a convenience func to execute the handler
+func (f Filter) AndThen(h Handler) Handler {
+	return f(h)
+}
+
+// Chain folds a series of Filters with a Handler to construct a new Handler
+func Chain(h Handler, filters ...Filter) Handler {
+	for i := len(filters) - 1; i >= 0; i-- {
+		h = filters[i].AndThen(h)
+	}
+
+	return func(ctx context.Context, subject string, message *Message) (*Message, error) {
+		return h(ctx, subject, message)
+	}
+}

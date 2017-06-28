@@ -26,6 +26,7 @@ type config struct {
 	url            string
 	queue          string
 	nc             *nats.Conn
+	filters        []Filter
 	headers        map[string]struct{}
 	cookies        map[string]struct{}
 	subject        string
@@ -74,6 +75,13 @@ func WithHeaders(headers ...string) Option {
 				p.headers[v] = struct{}{}
 			}
 		}
+	}
+}
+
+// WithFilters allows gateway filters to be specified; applies ONLY to Gateway
+func WithFilters(filters ...Filter) Option {
+	return func(p *config) {
+		p.filters = append(p.filters, filters...)
 	}
 }
 
