@@ -13,6 +13,15 @@ http on the front; nats on the backend
 The aim of ```nats-proxy``` is to take the pain out of service discovery while at the
 same time preserving the existing tooling around ```http.Handler```
 
+### Why NATS
+
+In a typical micro service environment, service discovery or how one micro service finds another
+micro service can be a complicated thing.  Various tools have been developed to manage the 
+service discovery issue including consul, etcd, and eureka.
+
+Leverage NATS for service discovery, we dramatically reduce the amount of effort required for
+services to discover each other.
+
 ### Status
 
 Library is very fresh, but is already used in production so some changes are likely, but probably not
