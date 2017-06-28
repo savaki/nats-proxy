@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package nats_proxy;
+
+message Cookie {
+    string value = 1;
+    string path = 2;
+}
+
+message Message {
+    int32 status = 1;
+    string method = 2;
+    map<string, string> header = 3;
+    map<string, Cookie> cookies = 4;
+    bytes body = 5;
+}
