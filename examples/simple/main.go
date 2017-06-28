@@ -6,11 +6,11 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/savaki/nats-proxy"
 	"github.com/nats-io/go-nats"
+	"github.com/savaki/nats-proxy"
 )
 
-func Hello(w http.ResponseWriter, _ *http.Request) {
+func hello(w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(http.StatusOK)
 	io.WriteString(w, "hello world")
@@ -32,7 +32,7 @@ func main() {
 
 	// Start Service
 	//
-	r, _ := nats_proxy.Wrap(http.HandlerFunc(Hello),
+	r, _ := nats_proxy.Wrap(http.HandlerFunc(hello),
 		nats_proxy.WithNats(nc),
 	)
 	done, _ := r.Subscribe(ctx)

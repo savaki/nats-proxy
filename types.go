@@ -16,4 +16,3 @@ func Nop() Handler {
 		return message, nil
 	}
 }
-

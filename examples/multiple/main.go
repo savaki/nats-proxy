@@ -6,11 +6,11 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/savaki/nats-proxy"
 	"github.com/nats-io/go-nats"
+	"github.com/savaki/nats-proxy"
 )
 
-func Service(label string) http.HandlerFunc {
+func service(label string) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		w.Header().Set("Content-Type", "text/plain")
 		w.WriteHeader(http.StatusOK)
@@ -37,7 +37,7 @@ func main() {
 
 	// Start Service Foo
 	//
-	foo, _ := nats_proxy.Wrap(Service("foo"),
+	foo, _ := nats_proxy.Wrap(service("foo"),
 		nats_proxy.WithSubject("api.foo"), // e.g. /foo*
 		nats_proxy.WithNats(nc),
 	)
@@ -45,7 +45,7 @@ func main() {
 
 	// Start Service Bar
 	//
-	bar, _ := nats_proxy.Wrap(Service("bar"),
+	bar, _ := nats_proxy.Wrap(service("bar"),
 		nats_proxy.WithSubject("api.bar"), // e.g. /bar*
 		nats_proxy.WithNats(nc),
 	)

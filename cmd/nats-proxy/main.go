@@ -11,14 +11,14 @@ import (
 	"github.com/urfave/cli"
 )
 
-type Options struct {
+type options struct {
 	Port    int
 	Subject string
 	Headers string
 	Cookies string
 }
 
-var opts Options
+var opts options
 
 func main() {
 	app := cli.NewApp()
@@ -49,7 +49,7 @@ func main() {
 			Destination: &opts.Cookies,
 		},
 	}
-	app.Action = Run
+	app.Action = run
 	app.Run(os.Args)
 }
 
@@ -59,7 +59,7 @@ func check(err error) {
 	}
 }
 
-func Run(_ *cli.Context) error {
+func run(_ *cli.Context) error {
 	proxy, err := nats_proxy.NewGateway(
 		nats_proxy.WithSubject(opts.Subject),
 		nats_proxy.WithHeaders(strings.Split(opts.Headers, ",")...),
