@@ -13,6 +13,11 @@ http on the front; nats on the backend
 The aim of ```nats-proxy``` is to take the pain out of service discovery while at the
 same time preserving the existing tooling around ```http.Handler```
 
+### Status
+
+Library is very fresh, but is already used in production so some changes are likely, but probably not
+big ones.
+
 ### Example Usage
 
 #### nats-proxy gateway
