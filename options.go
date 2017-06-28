@@ -11,9 +11,14 @@ import (
 )
 
 const (
+	// DefaultSubject provides the name of the root subject nats-proxy will bind to
 	DefaultSubject = "api"
+
+	// DefaultTimeout specifies the maximum amount of time a request may take
 	DefaultTimeout = time.Second * 10
-	DefaultQueue   = "service"
+
+	// DefaultQueue specifies the name of the queue for Conn.QueueSubscribe
+	DefaultQueue = "service"
 )
 
 type config struct {
