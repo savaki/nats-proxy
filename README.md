@@ -74,7 +74,7 @@ the following url:
 
     http://localhost/a/b/c
 
-the resuling subject would be
+the resulting subject would be
 
     api.a.b.c
     
