@@ -3,10 +3,12 @@ package nats_proxy
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"strings"
 
 	"github.com/gogo/protobuf/proto"
@@ -72,9 +74,16 @@ func (r *Router) Subscribe(ctx context.Context) (<-chan struct{}, error) {
 }
 
 func (r *Router) handler(msg *nats.Msg) {
-	req, err := requestFromMessage(msg, r.subject)
+	m := &Message{}
+	if err := proto.Unmarshal(msg.Data, m); err != nil {
+		fmt.Fprintf(os.Stderr, "ERR: unable to unmarshal *Message from *nats.Msg, %v\n", err)
+		return
+	}
+
+	req, err := requestFromMessage(m, r.subject, msg.Subject)
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Fprintf(os.Stderr, "ERR: unable to create *Request from *Message, %v\n", err)
+		return
 	}
 
 	w := httptest.NewRecorder()
@@ -85,18 +94,12 @@ func (r *Router) handler(msg *nats.Msg) {
 	}
 }
 
-func requestFromMessage(msg *nats.Msg, rootSubject string) (*http.Request, error) {
-	m := &Message{}
-	if err := proto.Unmarshal(msg.Data, m); err != nil {
-		return nil, err
-	}
-
+func requestFromMessage(m *Message, rootSubject, subject string) (*http.Request, error) {
 	var body io.Reader
-	if msg.Data != nil {
-		body = bytes.NewReader(msg.Data)
+	if m.Body != nil {
+		body = bytes.NewReader(m.Body)
 	}
 
-	subject := msg.Subject
 	if strings.HasPrefix(subject, rootSubject) {
 		subject = subject[len(rootSubject):]
 	}
