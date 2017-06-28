@@ -1,3 +1,6 @@
+[![GoReport](https://goreportcard.com/badge/github.com/altairsix/nats-proxy)](https://goreportcard.com/report/github.com/altairsix/nats-proxy)
+[![GoDoc](https://godoc.org/github.com/altairsix/nats-proxy?status.svg)](https://godoc.org/github.com/altairsix/nats-proxy)
+
 # nats-proxy
 
 http on the front; nats on the backend
