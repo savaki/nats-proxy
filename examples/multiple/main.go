@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/altairsix/nats-proxy"
+	"github.com/savaki/nats-proxy"
 	"github.com/nats-io/go-nats"
 )
 

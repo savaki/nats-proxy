@@ -5,7 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/altairsix/nats-proxy"
+	"github.com/savaki/nats-proxy"
 	"github.com/stretchr/testify/assert"
 )
 

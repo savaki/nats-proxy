@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/altairsix/nats-proxy"
+	"github.com/savaki/nats-proxy"
 	"github.com/urfave/cli"
 )
 

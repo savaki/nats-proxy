@@ -1,5 +1,5 @@
-[![GoReport](https://goreportcard.com/badge/github.com/altairsix/nats-proxy)](https://goreportcard.com/report/github.com/altairsix/nats-proxy)
-[![GoDoc](https://godoc.org/github.com/altairsix/nats-proxy?status.svg)](https://godoc.org/github.com/altairsix/nats-proxy)
+[![GoReport](https://goreportcard.com/badge/github.com/savaki/nats-proxy)](https://goreportcard.com/report/github.com/savaki/nats-proxy)
+[![GoDoc](https://godoc.org/github.com/savaki/nats-proxy?status.svg)](https://godoc.org/github.com/savaki/nats-proxy)
 
 # nats-proxy
 
