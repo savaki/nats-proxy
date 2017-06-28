@@ -51,6 +51,8 @@ nats_proxy.Wrap(h,
 resp, _ := http.Get("http://127.0.0.1/api/sample")
 ```
 
+For additional examples, see the examples package.
+
 ## NATS subject
 
 ```nats-proxy``` leverages the NATS subject to route requests.  Given a gateway with the subject ```api``` and 
