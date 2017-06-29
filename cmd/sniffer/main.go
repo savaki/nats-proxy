@@ -2,13 +2,16 @@ package main
 
 import (
 	"context"
+	"encoding/hex"
 	"fmt"
 	"io"
 	"log"
+	"math/rand"
 	"net/http"
 	"net/http/httputil"
 	"os"
 	"os/signal"
+	"time"
 
 	"github.com/nats-io/go-nats"
 	"github.com/savaki/nats-proxy"
@@ -17,12 +20,17 @@ import (
 
 type Options struct {
 	Subject string
-	NatsUrl string
+	NatsURL string
+	Queue   string
 }
 
 var opts Options
 
 func main() {
+	buf := make([]byte, 12)
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	r.Read(buf)
+
 	app := cli.NewApp()
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
@@ -35,7 +43,13 @@ func main() {
 			Name:        "server",
 			Value:       nats.DefaultURL,
 			Usage:       "nats server to connect to",
-			Destination: &opts.NatsUrl,
+			Destination: &opts.NatsURL,
+		},
+		cli.StringFlag{
+			Name:        "queue",
+			Value:       hex.EncodeToString(buf),
+			Usage:       "unique queue name",
+			Destination: &opts.Queue,
 		},
 	}
 	app.Action = Run
@@ -67,13 +81,14 @@ func check(err error) {
 
 func Run(_ *cli.Context) error {
 	ctx, cancel := context.WithCancel(context.Background())
-	nc, err := nats.Connect(opts.NatsUrl)
+	nc, err := nats.Connect(opts.NatsURL)
 	check(err)
 
 	h := Dump()
 	r, err := nats_proxy.Wrap(h,
 		nats_proxy.WithSubject(opts.Subject),
 		nats_proxy.WithNats(nc),
+		nats_proxy.WithQueue(opts.Queue),
 	)
 	check(err)
 
