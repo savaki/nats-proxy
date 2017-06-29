@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -16,6 +17,7 @@ type options struct {
 	Subject string
 	Headers string
 	Cookies string
+	Set     cli.StringSlice
 }
 
 var opts options
@@ -48,6 +50,11 @@ func main() {
 			EnvVar:      "COOKIES",
 			Destination: &opts.Cookies,
 		},
+		cli.StringSliceFlag{
+			Name:  "set",
+			Usage: "set header items KEY=VALUE",
+			Value: &opts.Set,
+		},
 	}
 	app.Action = run
 	app.Run(os.Args)
@@ -59,11 +66,27 @@ func check(err error) {
 	}
 }
 
+func SetHeaders() nats_proxy.Filter {
+	return func(h nats_proxy.Handler) nats_proxy.Handler {
+		return func(ctx context.Context, subject string, message *nats_proxy.Message) (*nats_proxy.Message, error) {
+			for _, item := range opts.Set {
+				if segments := strings.SplitN(item, "=", 2); len(segments) == 2 {
+					key := segments[0]
+					value := segments[1]
+					message.Header[key] = value
+				}
+			}
+			return h(ctx, subject, message)
+		}
+	}
+}
+
 func run(_ *cli.Context) error {
 	proxy, err := nats_proxy.NewGateway(
 		nats_proxy.WithSubject(opts.Subject),
 		nats_proxy.WithHeaders(strings.Split(opts.Headers, ",")...),
 		nats_proxy.WithCookies(strings.Split(opts.Cookies, ",")...),
+		nats_proxy.WithFilters(SetHeaders()),
 	)
 	check(err)
 
